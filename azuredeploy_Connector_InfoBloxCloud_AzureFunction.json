@@ -18,7 +18,7 @@
         },
         "AzureClientSecret": {
             "minLength": 1,
-            "type": "String",
+            "type": "SecureString",
             "metadata": {
                 "description": "Enter Azure Client Secret."
             }
@@ -264,7 +264,7 @@
                         "File_Share_Name": "infoblox-checkpoints",
                         "File_Share_Name_For_Data": "infoblox-data-files",
                         "Checkpoint_File_Name": "infoblox",
-                        "WEBSITE_RUN_FROM_PACKAGE": "https://github.com/priyalaxminayak/infoblox-ms-sentinel-integration/blob/main/DataConnector_InfobloxHistoricalToAzureStorage-infoblox-sentinel-D-1.0.0-5.zip?raw=true"
+                        "WEBSITE_RUN_FROM_PACKAGE": "https://github.com/fenil-savani/Infoblox-Data-Connector/raw/main/InfobloxHistoricalToAzureStorage.zip"
                     }
                 }
             ],
@@ -466,7 +466,7 @@
                         "File_Share_Name": "infoblox-checkpoint",
                         "File_Share_Name_For_Data": "infoblox-data-files",
                         "Checkpoint_File_Name": "infoblox",
-                        "WEBSITE_RUN_FROM_PACKAGE": "https://github.com/priyalaxminayak/infoblox-ms-sentinel-integration/blob/main/DataConnector_InfobloxCurrentToAzureStorage-infoblox-sentinel-D-1.0.0-5.zip?raw=true"
+                        "WEBSITE_RUN_FROM_PACKAGE": "https://github.com/fenil-savani/Infoblox-Data-Connector/raw/main/InfobloxCurrentToAzureStorage.zip"
                     }
                 }
             ],
@@ -662,7 +662,7 @@
                         "Schedule": "0 */15 * * * *",
                         "LogLevel": "[parameters('LogLevel')]",
                         "File_Share_Name_For_Data": "infoblox-data-files",
-                        "WEBSITE_RUN_FROM_PACKAGE": "https://github.com/priyalaxminayak/infoblox-ms-sentinel-integration/blob/main/DataConnector_InfoBloxParseRawIndicators-infoblox-sentinel-D-1.0.0-5.zip?raw=true"
+                        "WEBSITE_RUN_FROM_PACKAGE": "https://github.com/fenil-savani/Infoblox-Data-Connector/raw/main/InfoBloxParseRawIndicators.zip"
                     }
                 }
             ],
@@ -865,7 +865,7 @@
                         "LogLevel": "[parameters('LogLevel')]",
                         "Confidence_Threshold": "[parameters('Confidence')]",
                         "Threat_Level": "[parameters('ThreatLevel')]",
-                        "WEBSITE_RUN_FROM_PACKAGE": "https://github.com/priyalaxminayak/infoblox-ms-sentinel-integration/blob/main/DataConnector_AzureStorageToIndicators-infoblox-sentinel-D-1.0.0-5.zip?raw=true"
+                        "WEBSITE_RUN_FROM_PACKAGE": "https://github.com/fenil-savani/Infoblox-Data-Connector/raw/main/AzureStorageToIndicators.zip"
                     }
                 }
             ],
