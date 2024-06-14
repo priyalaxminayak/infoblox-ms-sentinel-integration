@@ -34,7 +34,7 @@
             "defaultValue": "https://csp.infoblox.com",
             "type": "string",
             "metadata": {
-                "description": "Enter Base URL of Infoblox API e.g. https://csp.infoblox.com)."
+                "description": "Enter Base URL of Infoblox API (e.g. https://csp.infoblox.com)."
             }
         },
         "WorkspaceID": {
@@ -68,16 +68,29 @@
             "type": "int",
             "defaultValue": 80,
             "minValue": 0,
-            "maxValue": 100
+            "maxValue": 100,
+            "metadata": {
+                "description": "Specify the confidence for creating indicators (Indicators will be generated with a confidence greater than or equal to the specified value)."
+            }
         },
         "ThreatLevel": {
             "type": "int",
             "defaultValue": 80,
             "minValue": 0,
-            "maxValue": 100
+            "maxValue": 100,
+            "metadata": {
+                "description": "Specify the threat level for creating indicators (Indicators will be generated with a threat level greater than or equal to the specified value)."
+            }
+        },
+        "AppInsightsWorkspaceResourceID": {
+            "type": "string",
+            "metadata": {
+                "description": "Migrate Classic Application Insights to Log Analytic Workspace which is retiring by 29 Febraury 2024. Use 'Log Analytic Workspace-->Properties' blade having 'Resource ID' property value. This is a fully qualified resourceId which is in format '/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OperationalInsights/workspaces/{workspaceName}'"
+            }
         }
     },
     "variables": {
+        "FunctionNameDurable" : "DossierLookup",
         "function_names_Historical": [ "host", "ip", "url", "hash", "email" ],
         "function_names_Current": [ "host", "ip", "url", "hash", "email" ],
         "function_names_Json_parse": [ "hist", "curr" ],
@@ -121,13 +134,14 @@
     "resources": [
         {
             "type": "Microsoft.Insights/components",
-            "apiVersion": "2015-05-01",
+            "apiVersion": "2020-02-02",
             "name": "[variables('HistoricalNameArray')[copyIndex()].Historical]",
             "location": "[resourceGroup().location]",
             "kind": "web",
             "properties": {
                 "Application_Type": "web",
-                "ApplicationId": "[variables('HistoricalNameArray')[copyIndex()].Historical]"
+                "ApplicationId": "[variables('HistoricalNameArray')[copyIndex()].Historical]",
+                "WorkspaceResourceId": "[parameters('AppInsightsWorkspaceResourceID')]"
             },
             "copy": {
                 "name": "componentcopy",
@@ -264,7 +278,7 @@
                         "File_Share_Name": "infoblox-checkpoints",
                         "File_Share_Name_For_Data": "infoblox-data-files",
                         "Checkpoint_File_Name": "infoblox",
-                        "WEBSITE_RUN_FROM_PACKAGE": "https://github.com/fenil-savani/Infoblox-Data-Connector/raw/main/InfobloxHistoricalToAzureStorage.zip"
+                        "WEBSITE_RUN_FROM_PACKAGE":"https://aka.ms/sentinel-InfobloxHistoricalToAzureStorage-functionapp"
                     }
                 }
             ],
@@ -323,13 +337,14 @@
         },
         {
             "type": "Microsoft.Insights/components",
-            "apiVersion": "2015-05-01",
+            "apiVersion": "2020-02-02",
             "name": "[variables('CurrentNameArray')[copyIndex()].Current]",
             "location": "[resourceGroup().location]",
             "kind": "web",
             "properties": {
                 "Application_Type": "web",
-                "ApplicationId": "[variables('CurrentNameArray')[copyIndex()].Current]"
+                "ApplicationId": "[variables('CurrentNameArray')[copyIndex()].Current]",
+                "WorkspaceResourceId": "[parameters('AppInsightsWorkspaceResourceID')]"
             },
             "copy": {
                 "name": "componentcopy",
@@ -466,7 +481,7 @@
                         "File_Share_Name": "infoblox-checkpoint",
                         "File_Share_Name_For_Data": "infoblox-data-files",
                         "Checkpoint_File_Name": "infoblox",
-                        "WEBSITE_RUN_FROM_PACKAGE": "https://github.com/fenil-savani/Infoblox-Data-Connector/raw/main/InfobloxCurrentToAzureStorage.zip"
+                        "WEBSITE_RUN_FROM_PACKAGE":"https://aka.ms/sentinel-InfobloxCurrentToAzureStorage-functionapp"
                     }
                 }
             ],
@@ -525,13 +540,14 @@
         },
         {
             "type": "Microsoft.Insights/components",
-            "apiVersion": "2015-05-01",
+            "apiVersion": "2020-02-02",
             "name": "[variables('JsonParseNameArray')[copyIndex()].Json_parse]",
             "location": "[resourceGroup().location]",
             "kind": "web",
             "properties": {
                 "Application_Type": "web",
-                "ApplicationId": "[variables('JsonParseNameArray')[copyIndex()].Json_parse]"
+                "ApplicationId": "[variables('JsonParseNameArray')[copyIndex()].Json_parse]",
+                "WorkspaceResourceId": "[parameters('AppInsightsWorkspaceResourceID')]"
             },
             "copy": {
                 "name": "componentcopy",
@@ -662,7 +678,7 @@
                         "Schedule": "0 */15 * * * *",
                         "LogLevel": "[parameters('LogLevel')]",
                         "File_Share_Name_For_Data": "infoblox-data-files",
-                        "WEBSITE_RUN_FROM_PACKAGE": "https://github.com/fenil-savani/Infoblox-Data-Connector/raw/main/InfoBloxParseRawIndicators.zip"
+                        "WEBSITE_RUN_FROM_PACKAGE":"https://aka.ms/sentinel-InfoBloxParseRawIndicators-functionapp"
                     }
                 }
             ],
@@ -721,13 +737,14 @@
         },
         {
             "type": "Microsoft.Insights/components",
-            "apiVersion": "2015-05-01",
+            "apiVersion": "2020-02-02",
             "name": "[variables('IndicatorNameArray')[copyIndex()].Indicators]",
             "location": "[resourceGroup().location]",
             "kind": "web",
             "properties": {
                 "Application_Type": "web",
-                "ApplicationId": "[variables('IndicatorNameArray')[copyIndex()].Indicators]"
+                "ApplicationId": "[variables('IndicatorNameArray')[copyIndex()].Indicators]",
+                "WorkspaceResourceId": "[parameters('AppInsightsWorkspaceResourceID')]"
             },
             "copy": {
                 "name": "componentcopy",
@@ -865,7 +882,7 @@
                         "LogLevel": "[parameters('LogLevel')]",
                         "Confidence_Threshold": "[parameters('Confidence')]",
                         "Threat_Level": "[parameters('ThreatLevel')]",
-                        "WEBSITE_RUN_FROM_PACKAGE": "https://github.com/fenil-savani/Infoblox-Data-Connector/raw/main/AzureStorageToIndicators.zip"
+                        "WEBSITE_RUN_FROM_PACKAGE":"https://aka.ms/sentinel-AzureStorageToIndicators-functionapp"
                     }
                 }
             ],
@@ -920,6 +937,175 @@
             "copy": {
                 "name": "sharescopy",
                 "count": "[length(variables('function_names_Indicator'))]"
+            }
+        },
+        {
+            "type": "Microsoft.Insights/components",
+            "apiVersion": "2020-02-02",
+            "name": "[variables('FunctionNameDurable')]",
+            "location": "[resourceGroup().location]",
+            "kind": "web",
+            "properties": {
+                "Application_Type": "web",
+                "ApplicationId": "[variables('FunctionNameDurable')]",
+                "WorkspaceResourceId": "[parameters('AppInsightsWorkspaceResourceID')]"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-06-01",
+            "name": "[tolower(variables('FunctionNameDurable'))]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "kind": "StorageV2",
+            "properties": {
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(variables('FunctionNameDurable'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', tolower(variables('FunctionNameDurable')))]"
+            ],
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                },
+                "deleteRetentionPolicy": {
+                    "enabled": false
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(variables('FunctionNameDurable'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', tolower(variables('FunctionNameDurable')))]"
+            ],
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-11-01",
+            "name": "[variables('FunctionNameDurable')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', tolower(variables('FunctionNameDurable')))]",
+                "[resourceId('Microsoft.Insights/components', variables('FunctionNameDurable'))]"
+            ],
+            "kind": "functionapp,linux",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "name": "[variables('FunctionNameDurable')]",
+                "httpsOnly": true,
+                "clientAffinityEnabled": true,
+                "alwaysOn": true,
+                "reserved": true,
+                "siteConfig": {
+                    "linuxFxVersion": "python|3.8"
+                }
+            },
+            "resources": [
+                {
+                    "apiVersion": "2018-11-01",
+                    "type": "config",
+                    "name": "appsettings",
+                    "dependsOn": [
+                        "[concat('Microsoft.Web/sites/', variables('FunctionNameDurable'))]"
+                    ],
+                    "properties": {
+                        "FUNCTIONS_EXTENSION_VERSION": "~4",
+                        "FUNCTIONS_WORKER_RUNTIME": "python",
+                        "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('Microsoft.insights/components', variables('FunctionNameDurable')), '2015-05-01').InstrumentationKey]",
+                        "APPLICATIONINSIGHTS_CONNECTION_STRING": "[reference(resourceId('microsoft.insights/components', variables('FunctionNameDurable')), '2015-05-01').ConnectionString]",
+                        "AzureWebJobsStorage": "[concat('DefaultEndpointsProtocol=https;AccountName=', toLower(variables('FunctionNameDurable')),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', toLower(variables('FunctionNameDurable'))), '2019-06-01').keys[0].value, ';EndpointSuffix=',toLower(variables('StorageSuffix')))]",
+                        "logAnalyticsUri": "[variables('LogAnaltyicsUri')]",
+                        "API_token": "[parameters('InfobloxAPIToken')]",
+                        "BaseUrl": "[parameters('InfobloxBaseURL')]",
+                        "Workspace_Key": "[parameters('WorkspaceKey')]",
+                        "Workspace_Id": "[parameters('WorkspaceID')]",
+                        "Azure_Client_Id": "[parameters('AzureClientId')]",
+                        "Azure_Client_Secret": "[parameters('AzureClientSecret')]",
+                        "Azure_Tenant_Id": "[parameters('AzureTenantId')]",
+                        "LogLevel": "[parameters('LogLevel')]",
+                        "WEBSITE_RUN_FROM_PACKAGE": "https://aka.ms/sentinel-InfobloxDossierLookup-functionapp"
+                    }
+                }
+            ]
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(variables('FunctionNameDurable'), '/default/azure-webjobs-hosts')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('FunctionNameDurable'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('FunctionNameDurable'))]"
+            ],
+            "properties": {
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(variables('FunctionNameDurable'), '/default/azure-webjobs-secrets')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('FunctionNameDurable'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('FunctionNameDurable'))]"
+            ],
+            "properties": {
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(variables('FunctionNameDurable'), '/default/', tolower(variables('FunctionNameDurable')))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/fileServices', variables('FunctionNameDurable'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('FunctionNameDurable'))]"
+            ],
+            "properties": {
+                "shareQuota": 5120
             }
         }
     ]
