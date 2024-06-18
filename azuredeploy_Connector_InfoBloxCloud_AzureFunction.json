@@ -2,6 +2,38 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "InfobloxBaseURL": {
+            "defaultValue": "https://csp.infoblox.com",
+            "type": "string",
+            "metadata": {
+                "description": "Enter Base URL of Infoblox API (e.g. https://csp.infoblox.com)."
+            }
+        },
+        "InfobloxAPIToken": {
+            "minLength": 1,
+            "type": "String",
+            "metadata": {
+                "description": "Enter Infoblox API Token for authentication."
+            }
+        },
+        "Confidence": {
+            "type": "int",
+            "defaultValue": 80,
+            "minValue": 0,
+            "maxValue": 100,
+            "metadata": {
+                "description": "Specify the confidence for creating indicators (Indicators will be generated with a confidence greater than or equal to the specified value)."
+            }
+        },
+        "ThreatLevel": {
+            "type": "int",
+            "defaultValue": 80,
+            "minValue": 0,
+            "maxValue": 100,
+            "metadata": {
+                "description": "Specify the threat level for creating indicators (Indicators will be generated with a threat level greater than or equal to the specified value)."
+            }
+        },
         "AzureTenantId": {
             "minLength": 1,
             "type": "String",
@@ -21,20 +53,6 @@
             "type": "SecureString",
             "metadata": {
                 "description": "Enter Azure Client Secret."
-            }
-        },
-        "InfobloxAPIToken": {
-            "minLength": 1,
-            "type": "String",
-            "metadata": {
-                "description": "Enter Infoblox API Token for authentication."
-            }
-        },
-        "InfobloxBaseURL": {
-            "defaultValue": "https://csp.infoblox.com",
-            "type": "string",
-            "metadata": {
-                "description": "Enter Base URL of Infoblox API (e.g. https://csp.infoblox.com)."
             }
         },
         "WorkspaceID": {
@@ -64,24 +82,6 @@
                 "description": "Please add log level or log severity value. By default it is set to INFO."
             }
         },
-        "Confidence": {
-            "type": "int",
-            "defaultValue": 80,
-            "minValue": 0,
-            "maxValue": 100,
-            "metadata": {
-                "description": "Specify the confidence for creating indicators (Indicators will be generated with a confidence greater than or equal to the specified value)."
-            }
-        },
-        "ThreatLevel": {
-            "type": "int",
-            "defaultValue": 80,
-            "minValue": 0,
-            "maxValue": 100,
-            "metadata": {
-                "description": "Specify the threat level for creating indicators (Indicators will be generated with a threat level greater than or equal to the specified value)."
-            }
-        },
         "AppInsightsWorkspaceResourceID": {
             "type": "string",
             "metadata": {
@@ -90,7 +90,7 @@
         }
     },
     "variables": {
-        "FunctionNameDurable" : "DossierLookup",
+        "FunctionNameDurable" : "[concat('dossierlook',uniqueString(resourceGroup().id))]",
         "function_names_Historical": [ "host", "ip", "url", "hash", "email" ],
         "function_names_Current": [ "host", "ip", "url", "hash", "email" ],
         "function_names_Json_parse": [ "hist", "curr" ],
@@ -1041,7 +1041,7 @@
                 "alwaysOn": true,
                 "reserved": true,
                 "siteConfig": {
-                    "linuxFxVersion": "python|3.8"
+                    "linuxFxVersion": "python|3.9"
                 }
             },
             "resources": [
