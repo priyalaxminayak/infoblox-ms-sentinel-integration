@@ -9,9 +9,9 @@
                 "description": "Enter Base URL of Infoblox API (e.g. https://csp.infoblox.com)."
             }
         },
-        "InfobloxAPIToken": {
+         "InfobloxAPIToken": {
             "minLength": 1,
-            "type": "String",
+            "type": "SecureString",
             "metadata": {
                 "description": "Enter Infoblox API Token for authentication."
             }
@@ -22,7 +22,7 @@
             "minValue": 0,
             "maxValue": 100,
             "metadata": {
-                "description": "Specify the confidence for creating indicators (Indicators will be generated with a confidence greater than or equal to the specified value)."
+                "description": "Specify the confidence for creating indicators (Indicators will be generated with a confidence greater than or equal to the specified value), By default it is set to 80 ."
             }
         },
         "ThreatLevel": {
@@ -31,28 +31,28 @@
             "minValue": 0,
             "maxValue": 100,
             "metadata": {
-                "description": "Specify the threat level for creating indicators (Indicators will be generated with a threat level greater than or equal to the specified value)."
+                "description": "Specify the threat level for creating indicators (Indicators will be generated with a threat level greater than or equal to the specified value), By default it is set to 80 ."
             }
         },
         "AzureTenantId": {
             "minLength": 1,
             "type": "String",
             "metadata": {
-                "description": "Enter Azure Tenant ID."
+                "description": "Enter Azure Tenant ID of your Azure Active Directory."
             }
         },
         "AzureClientId": {
             "minLength": 1,
             "type": "String",
             "metadata": {
-                "description": "Enter Azure Client ID."
+                "description": "Enter Azure Client ID that you have created during app registration."
             }
         },
         "AzureClientSecret": {
             "minLength": 1,
             "type": "SecureString",
             "metadata": {
-                "description": "Enter Azure Client Secret."
+                "description": "Enter Azure Client Secret that you have created during creating the client secret."
             }
         },
         "WorkspaceID": {
@@ -79,7 +79,7 @@
             ],
             "type": "String",
             "metadata": {
-                "description": "Please add log level or log severity value. By default it is set to INFO."
+                "description": "Add log level or log severity value, By default it is set to INFO."
             }
         },
         "AppInsightsWorkspaceResourceID": {
@@ -278,7 +278,7 @@
                         "File_Share_Name": "infoblox-checkpoints",
                         "File_Share_Name_For_Data": "infoblox-data-files",
                         "Checkpoint_File_Name": "infoblox",
-                        "WEBSITE_RUN_FROM_PACKAGE":"https://aka.ms/sentinel-InfobloxHistoricalToAzureStorage-functionapp"
+                        "WEBSITE_RUN_FROM_PACKAGE": "https://aka.ms/sentinel-InfobloxHistoricalToAzureStorage-functionapp"
                     }
                 }
             ],
@@ -481,7 +481,7 @@
                         "File_Share_Name": "infoblox-checkpoint",
                         "File_Share_Name_For_Data": "infoblox-data-files",
                         "Checkpoint_File_Name": "infoblox",
-                        "WEBSITE_RUN_FROM_PACKAGE":"https://aka.ms/sentinel-InfobloxCurrentToAzureStorage-functionapp"
+                        "WEBSITE_RUN_FROM_PACKAGE": "https://aka.ms/sentinel-InfobloxCurrentToAzureStorage-functionapp"
                     }
                 }
             ],
@@ -678,7 +678,7 @@
                         "Schedule": "0 */15 * * * *",
                         "LogLevel": "[parameters('LogLevel')]",
                         "File_Share_Name_For_Data": "infoblox-data-files",
-                        "WEBSITE_RUN_FROM_PACKAGE":"https://aka.ms/sentinel-InfoBloxParseRawIndicators-functionapp"
+                        "WEBSITE_RUN_FROM_PACKAGE": "https://aka.ms/sentinel-InfoBloxParseRawIndicators-functionapp"
                     }
                 }
             ],
@@ -882,7 +882,7 @@
                         "LogLevel": "[parameters('LogLevel')]",
                         "Confidence_Threshold": "[parameters('Confidence')]",
                         "Threat_Level": "[parameters('ThreatLevel')]",
-                        "WEBSITE_RUN_FROM_PACKAGE":"https://aka.ms/sentinel-AzureStorageToIndicators-functionapp"
+                        "WEBSITE_RUN_FROM_PACKAGE": "https://aka.ms/sentinel-AzureStorageToIndicators-functionapp"
                     }
                 }
             ],
