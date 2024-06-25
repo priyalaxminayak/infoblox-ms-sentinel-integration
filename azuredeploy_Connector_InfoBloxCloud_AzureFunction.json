@@ -6,14 +6,14 @@
             "defaultValue": "https://csp.infoblox.com",
             "type": "string",
             "metadata": {
-                "description": "Enter Base URL of Infoblox API (e.g. https://csp.infoblox.com)."
+                "description": "Enter Base URL of Infoblox API. (e.g. https://csp.infoblox.com)"
             }
         },
          "InfobloxAPIToken": {
             "minLength": 1,
             "type": "SecureString",
             "metadata": {
-                "description": "Enter Infoblox API Token for authentication."
+                "description": "Enter Infoblox API Token for authentication"
             }
         },
         "Confidence": {
@@ -22,7 +22,7 @@
             "minValue": 0,
             "maxValue": 100,
             "metadata": {
-                "description": "Specify the confidence for creating indicators (Indicators will be generated with a confidence greater than or equal to the specified value), By default it is set to 80 ."
+                "description": "Specify the confidence for creating indicators (Indicators will be generated with a confidence greater than or equal to the specified value), By default it is set to 80"
             }
         },
         "ThreatLevel": {
@@ -31,42 +31,42 @@
             "minValue": 0,
             "maxValue": 100,
             "metadata": {
-                "description": "Specify the threat level for creating indicators (Indicators will be generated with a threat level greater than or equal to the specified value), By default it is set to 80 ."
+                "description": "Specify the threat level for creating indicators (Indicators will be generated with a threat level greater than or equal to the specified value), By default it is set to 80"
             }
         },
         "AzureTenantId": {
             "minLength": 1,
             "type": "String",
             "metadata": {
-                "description": "Enter Azure Tenant ID of your Azure Active Directory."
+                "description": "Enter Azure Tenant ID of your Azure Active Directory"
             }
         },
         "AzureClientId": {
             "minLength": 1,
             "type": "String",
             "metadata": {
-                "description": "Enter Azure Client ID that you have created during app registration."
+                "description": "Enter Azure Client ID that you have created during app registration"
             }
         },
         "AzureClientSecret": {
             "minLength": 1,
             "type": "SecureString",
             "metadata": {
-                "description": "Enter Azure Client Secret that you have created during creating the client secret."
+                "description": "Enter Azure Client Secret that you have created during creating the client secret"
             }
         },
         "WorkspaceID": {
             "minLength": 1,
             "type": "String",
             "metadata": {
-                "description": "Enter Workspace ID of Log Analytics workspace."
+                "description": "Enter Workspace ID of Log Analytics workspace"
             }
         },
         "WorkspaceKey": {
             "minLength": 1,
             "type": "SecureString",
             "metadata": {
-                "description": "Enter Workspace Key of Log Analytics workspace."
+                "description": "Enter Workspace Key of Log Analytics workspace"
             }
         },
         "LogLevel": {
@@ -79,7 +79,7 @@
             ],
             "type": "String",
             "metadata": {
-                "description": "Add log level or log severity value, By default it is set to INFO."
+                "description": "Add log level or log severity value, By default it is set to INFO"
             }
         },
         "AppInsightsWorkspaceResourceID": {
