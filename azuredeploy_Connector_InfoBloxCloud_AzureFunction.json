@@ -34,6 +34,13 @@
                 "description": "Specify the threat level for creating indicators (Indicators will be generated with a threat level greater than or equal to the specified value), By default it is set to 80"
             }
         },
+        "HistoricalDataCutoffDate": {
+            "type": "String",
+            "defaultValue" : "2024-01-01",
+            "metadata": {
+                "description": "Enter the cutoff date until which you want to retrieve historical data, starting from the current date and moving backwards. The date format should be YYYY-MM-DD. This marks the furthest point in the past from which data will be collected"
+            }
+        },
         "AzureTenantId": {
             "minLength": 1,
             "type": "String",
@@ -274,6 +281,9 @@
                         "Schedule": "0 */15 * * * *",
                         "ThreatType": "[variables('function_names_Historical')[copyIndex('sitescopy')]]",
                         "HISTORICAL_TIME_INTERVAL": "-3",
+                        "Historical_Start_Date": "[parameters('HistoricalDataCutoffDate')]",
+                        "Workspace_Key": "[parameters('WorkspaceKey')]",
+                        "Workspace_Id": "[parameters('WorkspaceID')]",
                         "LogLevel": "[parameters('LogLevel')]",
                         "File_Share_Name": "infoblox-checkpoints",
                         "File_Share_Name_For_Data": "infoblox-data-files",
@@ -477,6 +487,8 @@
                         "BaseUrl": "[parameters('InfobloxBaseURL')]",
                         "Schedule": "0 0 */1 * * *",
                         "CURRENT_TIME_INTERVAL": "1",
+                        "Workspace_Key": "[parameters('WorkspaceKey')]",
+                        "Workspace_Id": "[parameters('WorkspaceID')]",
                         "LogLevel": "[parameters('LogLevel')]",
                         "File_Share_Name": "infoblox-checkpoint",
                         "File_Share_Name_For_Data": "infoblox-data-files",
